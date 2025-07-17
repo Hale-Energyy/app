@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Text,
@@ -25,6 +26,10 @@ export default function SignUpScreen() {
   // Handle submission of sign-up form
   const onSignUpPress = async () => {
     if (!isLoaded) return;
+    if(!emailAddress || !password) {
+      Alert.alert("Error", "Please enter both email and password.");
+      return;
+  }
 
     console.log(emailAddress, password);
 
@@ -51,7 +56,13 @@ export default function SignUpScreen() {
   // Handle submission of verification form
   const onVerifyPress = async () => {
     if (!isLoaded) return;
+    if(!code){
+      Alert.alert("Error", "Please enter the verification code.");
+      return;
+  }
 
+
+    setIsLoading(true);
     try {
       // Use the code the user provided to attempt verification
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
@@ -72,6 +83,9 @@ export default function SignUpScreen() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+    }finally {
+      // Reset loading state after the verification attempt
+      setIsLoading(false);
     }
   };
 
@@ -131,7 +145,7 @@ export default function SignUpScreen() {
                   onPress={onVerifyPress}
                   disabled={isLoading}
                   className={`shadow-sm rounded-xl py-4 ${
-                    isLoading ? " bg-gray-400" : "bg-blue-600"
+                    isLoading ? " bg-gray-400" : "bg-green-600"
                   }`}
                   activeOpacity={0.8}
                 >

@@ -55,7 +55,7 @@ export default function GoogleSignIn() {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="bg-white-2 border-2 border-gray-200 rounded-xl py-4 drop-shadow-sm "
+      className="bg-white border-2 border-gray-200 rounded-xl py-4 drop-shadow-sm "
       activeOpacity={0.8}
     >
       <View className="flex-row items-center justify-center">
