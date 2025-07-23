@@ -21,21 +21,22 @@ export default function SignUpScreen() {
   const [password, setPassword] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [pendingVerification, setPendingVerification] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(true);
   const [code, setCode] = React.useState("");
 
   // Handle submission of sign-up form
   const onSignUpPress = async () => {
     if (!isLoaded) return;
-    if(!emailAddress || !password) {
+    if (!emailAddress || !password) {
       Alert.alert("Error", "Please enter both email and password.");
       return;
-  }
+    }
 
     console.log(emailAddress, password);
 
     // Start sign-up process using email and password provided
     try {
-      await signUp.create({
+      let res = await signUp.create({
         emailAddress,
         password,
       });
@@ -49,18 +50,22 @@ export default function SignUpScreen() {
     } catch (err) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
+      if (err.status === 422 && err.errors) {
+        Alert.alert(
+          "Error",
+          err.errors.map((error) => error.message).join("\n")
+        );
+      } else console.error(JSON.stringify(err, null, 2));
     }
   };
 
   // Handle submission of verification form
   const onVerifyPress = async () => {
     if (!isLoaded) return;
-    if(!code){
+    if (!code) {
       Alert.alert("Error", "Please enter the verification code.");
       return;
-  }
-
+    }
 
     setIsLoading(true);
     try {
@@ -83,7 +88,7 @@ export default function SignUpScreen() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
-    }finally {
+    } finally {
       // Reset loading state after the verification attempt
       setIsLoading(false);
     }
@@ -240,12 +245,23 @@ export default function SignUpScreen() {
                     autoCapitalize="none"
                     value={password}
                     placeholder="Enter your password"
-                    secureTextEntry={true}
+                    secureTextEntry={showPassword}
                     placeholderTextColor="#9CA3AF"
                     onChangeText={(email) => setPassword(email)}
                     className="flex-1 ml-3 text-gray-900"
                     editable={!isLoading}
                   />
+
+                  <TouchableOpacity
+                    onPress={() => setShowPassword((prev) => !prev)}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons
+                      name={showPassword ? "eye-off-outline" : "eye-outline"}
+                      size={20}
+                      color="#6B7280"
+                    />
+                  </TouchableOpacity>
                 </View>
                 <Text className="text-xs text-gray-500 mt-1 ml-1">
                   Must be at least 8 characters

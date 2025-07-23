@@ -1,9 +1,11 @@
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import React from 'react'
 import { Tabs } from 'expo-router'
 import AntDesign from '@expo/vector-icons/AntDesign'
+import { useUser } from '@clerk/clerk-expo'
 
 export default function Layout() {
+    const { user } = useUser()
   return (
     <Tabs >
    
@@ -64,7 +66,12 @@ export default function Layout() {
                     headerShown:false,
                     title:'Profile',
                     tabBarIcon: ({ color, size }) => (
-                      <AntDesign name='user' color={color} size={size} />                   )
+                    //   <AntDesign name='user' color={color} size={size} />  
+                    <Image 
+                        source={{ uri: user?.imageUrl || 'https://via.placeholder.com/150' }}
+                        resizeMode="cover"
+                        className='rounded-full'
+                        style={{width:28,height:28,borderRadius:100}} />                 )
                 }
             } 
             />

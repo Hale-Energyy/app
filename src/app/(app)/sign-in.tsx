@@ -1,7 +1,7 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import {
-    Alert,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Text,
@@ -21,14 +21,15 @@ export default function SignIn() {
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(true);
 
   // Handle the submission of the sign-in form
   const onSignInPress = async () => {
     if (!isLoaded) return;
 
-    if(!emailAddress || !password) {
-        Alert.alert("Error", "Please enter both email and password.");
-        return;
+    if (!emailAddress || !password) {
+      Alert.alert("Error", "Please enter both email and password.");
+      return;
     }
 
     setIsLoading(true);
@@ -54,7 +55,7 @@ export default function SignIn() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
-    }finally {
+    } finally {
       // Reset loading state after the sign-in attempt
       setIsLoading(false);
     }
@@ -129,12 +130,22 @@ export default function SignIn() {
                     autoCapitalize="none"
                     value={password}
                     placeholder="Enter your password"
-                    secureTextEntry={true}
+                    secureTextEntry={showPassword}
                     placeholderTextColor="#9CA3AF"
-                    onChangeText={(email) => setPassword(email)}
+                    onChangeText={setPassword}
                     className="flex-1 ml-3 text-gray-900"
                     editable={!isLoading}
                   />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword((prev) => !prev)}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons
+                      name={showPassword ? "eye-off-outline" : "eye-outline"}
+                      size={20}
+                      color="#6B7280"
+                    />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -172,18 +183,19 @@ export default function SignIn() {
             {/* Social Sign In Buttons (Placeholder) */}
             <GoogleSignIn />
 
+            {/* sign up link */}
 
-          {/* sign up link */}
-
-          <View className="flex-row items-center justify-center mt-4 ">
-                <Text className="text-gray-500">Don't have an account?</Text>
-                <Link href="/sign-up" className="text-blue-600 ml-2 font-semibold">
+            <View className="flex-row items-center justify-center mt-4 ">
+              <Text className="text-gray-500">Don't have an account?</Text>
+              <Link
+                href="/sign-up"
+                className="text-blue-600 ml-2 font-semibold"
+              >
                 Sign Up
-                </Link> 
+              </Link>
             </View>
           </View>
 
-            
           {/* footer */}
           <View className="pb-6">
             <Text className="text-center text-gray-500 text-sm">
