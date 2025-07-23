@@ -1,0 +1,14 @@
+import { View, Text } from 'react-native'
+import React from 'react'
+import Header from '@/app/components/profileSection/Header'
+
+export default function helpSupport() {
+  return (
+    <View>
+        <Header />
+        <Text className="text-gray-900 font-semibold text-4xl ml-4 mt-4">
+         Help & Support
+        </Text>
+    </View>
+  )
+}
